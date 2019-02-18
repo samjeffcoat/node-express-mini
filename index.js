@@ -21,10 +21,10 @@ server.get('/api/users', (req, res) => {
     .then(users => {
         res.status(200).json(users);
     })
-    .catch(({code, message})=> {
-        res.status(code).json({
-            succes:false, message, 
-        })
+    .catch(err=> {
+        res.status(500).json({error : 
+            "The users information could not be updated"
+        });
     })
 })
 
