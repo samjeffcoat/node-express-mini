@@ -28,6 +28,31 @@ server.get('/api/users', (req, res) => {
     })
 })
 
+//C in Crud
+//Creates a user using the information sent inside the request body.
+//If the request body is missing the name or bio property:
+//-cancel the request.
+//-respond with HTTP status code 400 (Bad Request).
+//-return the following JSON response: { errorMessage: "Please provide name and bio for the user." }.
+
+server.post('/api/users', (req, res) => {
+   let user= req.body
+// verifies that user infor is  contained in the request
+if (!user.name || !user.bio){ 
+    res.status(400).json({error: "Please provide name and bio info for the user"}) ;
+    return;
+}
+    db.insert(user)
+    .then(user => {
+        res.status(201).json({success: true, user});
+    })
+    .catch(err => {
+        res.status(500).json({ err: "There was an error while saving the user to the database"
+        });
+    });
+
+})
+
 
 
 
