@@ -50,6 +50,31 @@ if (!user.name || !user.bio){
         res.status(500).json({ err: "There was an error while saving the user to the database"
         });
     });
+})
+
+//When the client makes a GET request to /api/users/:id
+//1) If the user with the specified id is not found:
+//-return HTTP status code 404 (Not Found).
+//- return the following JSON object: { message: "The user with the specified ID does not exist." }.
+// else return that user id with successful message
+
+//2) If there is an error in retrieving user from database
+//-cancel the request
+//- respond with status code 500
+//return the JSON object { error: "The user information could not be retrieved." }.
+
+server.get('/api/users/:id', (req, res) =>{
+    db.findById(req.params.id)
+    .then(user => {
+        if(!user) {
+            res.status(404).json({message: "The user with the specified ID does not exist"});
+        } else {
+            res.status(200).json(user);
+        }
+    })
+    .catch(err=> {
+        res.status(500).json({error: "The user information could not be retrieved"});
+    });
 
 })
 
