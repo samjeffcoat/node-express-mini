@@ -103,8 +103,53 @@ server.delete('/api/users/:id', (req, res) => {
     })
 })
 
-////
+//// When the client makes a PUT request to /api/users/:id:
+//// U in CRUD
 
+////If the user with the specified id is not found:
+//// 1- return HTTP status code 404 (Not Found).
+//// 2-return the following JSON object: { message: "The user with the specified ID does not exist." }.
+
+///// If the request body is missing the name or bio property:
+//// 1- cancel the request.
+//// 2- respond with HTTP status code 400 (Bad Request).
+//// 3-return the following JSON response: { errorMessage: "Please provide name and bio for the user." }.
+
+//// If there's an error when updating the user:
+////  1. cancel the request.
+//// 2. respond with HTTP status code 500.
+/// 3. return the following JSON object: { error: "The user information could not be modified." }.
+
+
+////If the user is found and the new information is valid:
+//// 1. update the user document in the database using the new information sent in the reques body.
+//// 2.return HTTP status code 200 (OK).
+/// 3. return the newly updated user document.
+
+
+server.put('/users/:id', (req, res) =>{
+    const {id} = req.params;
+    const changes= req.body;
+
+    if (!changes.name || !changes.bio){
+        res.status(400).json({error: "Please provide name and bio for user."})
+        return;
+    }
+    db
+    .update(id, changes)
+    .then(user => {
+        if(!user) {
+            res.status(404).json({message: "The user with the specified ID does not exist."})
+        } else {
+            db.findById(id)
+            .then(updates => res.status(200).json(updates))
+            .catch(err => res.status(404).json({error: "The user was not found after updating"}))
+        }
+    })
+    .catch(err => {
+        res.status(500).json({error: "The user information could not be modified"})
+    })
+})
 
 
 
