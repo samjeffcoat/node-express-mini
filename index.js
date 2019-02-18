@@ -127,7 +127,7 @@ server.delete('/api/users/:id', (req, res) => {
 /// 3. return the newly updated user document.
 
 
-server.put('/users/:id', (req, res) =>{
+server.put('/api/users/:id', (req, res) =>{
     const {id} = req.params;
     const changes= req.body;
 
